@@ -2,4 +2,4 @@
 // через setHost(): работает даже когда api.telegram.org заблокирован
 // (см. README — Cloudflare Worker / свой прокси)
 #pragma once
-#include "src/FastBot2.h"
+#include "FastBot2.h"
