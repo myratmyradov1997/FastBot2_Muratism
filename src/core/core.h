@@ -11,8 +11,8 @@
 #include "Fetcher.h"
 #include "api.h"
 #include "core_class.h"
-#include "http.h"
 #include "packet.h"
+#include "http.h"
 #include "result.h"
 #include "types/Update.h"
 #include "updates.h"
@@ -393,7 +393,9 @@ class Core : public Http {
     // получить прямую ссылку на файл
     String getFileLink(Text fileID) {
         if (!_token.length()) return String();
-        String link = F("https://" TELEGRAM_HOST "/file/bot");
+        String link = F("https://");
+        link += Packet::hostName;
+        link += F("/file/bot");
         link += _token;
         link += '/';
         link += getFilePath(fileID);

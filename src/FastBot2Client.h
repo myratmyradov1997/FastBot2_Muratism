@@ -91,6 +91,12 @@ class FastBot2Client : public fb::Core {
 
     // ============================== SET ==============================
 
+    // установить хост Telegram API (например, свой Cloudflare Worker/прокси для обхода блокировок)
+    // пример: bot.setHost("shrill-frost-xxxx.workers.dev")
+    using fb::Core::setHost;
+    using fb::Core::clearHost;
+    using fb::Core::getHost;
+
     // отправить статус "набирает сообщение" на 5 секунд
     fb::Result setTyping(fb::ID chatID, bool wait = true) {
         if (!chatID) return fb::Result();

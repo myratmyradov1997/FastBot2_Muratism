@@ -1,81 +1,135 @@
-[![latest](https://img.shields.io/github/v/release/GyverLibs/FastBot2.svg?color=brightgreen)](https://github.com/GyverLibs/FastBot2/releases/latest/download/FastBot2.zip)
-[![PIO](https://badges.registry.platformio.org/packages/gyverlibs/library/FastBot2.svg)](https://registry.platformio.org/libraries/gyverlibs/FastBot2)
-[![Foo](https://img.shields.io/badge/Website-AlexGyver.ru-blue.svg?style=flat-square)](https://alexgyver.ru/)
-[![Foo](https://img.shields.io/badge/%E2%82%BD%24%E2%82%AC%20%D0%9F%D0%BE%D0%B4%D0%B4%D0%B5%D1%80%D0%B6%D0%B0%D1%82%D1%8C-%D0%B0%D0%B2%D1%82%D0%BE%D1%80%D0%B0-orange.svg?style=flat-square)](https://alexgyver.ru/support_alex/)
-[![Foo](https://img.shields.io/badge/README-ENGLISH-blueviolet.svg?style=flat-square)](https://github-com.translate.goog/GyverLibs/FastBot2?_x_tr_sl=ru&_x_tr_tl=en)  
+# FastBot2_Myradov
 
-[![Foo](https://img.shields.io/badge/ПОДПИСАТЬСЯ-НА%20ОБНОВЛЕНИЯ-brightgreen.svg?style=social&logo=telegram&color=blue)](https://t.me/GyverLibs)
+Форк библиотеки [FastBot2](https://github.com/GyverLibs/FastBot2) (AlexGyver) — Telegram-бот для Arduino / ESP8266 / ESP32.
 
-# FastBot2
-Библиотека Telegram бота для Arduino, ESP8266, ESP32:
-- Несколько режимов опроса, включая **long polling**
-- Быстрый парсинг ответов сервера ([в 6 раз быстрее](https://github.com/GyverLibs/GSON?tab=readme-ov-file#%D1%82%D0%B5%D1%81%D1%82%D1%8B) других библиотек на базе ArduinoJSON, в 2-3 раза быстрее первой версии [FastBot](https://github.com/GyverLibs/FastBot))
-- Все самые нужные инструменты обёрнуты в удобные классы
-- В "ручном режиме" доступен полностью весь [Telegram Bot API](https://core.telegram.org/bots/api)
-- Лёгкий вес, эффективное использование оперативной памяти
-- Нативная поддержка WiFi ESP8266/ESP32
-- Загрузка и скачивание файлов, OTA обновление (ESP8266/ESP32)
-- Работает на базе Arduino Client, возможна работа по Ethernet, GSM и так далее
+**Главное отличие от оригинала:** добавлен метод `setHost()`, позволяющий указать **свой адрес Telegram API** (например, Cloudflare Worker или свой прокси-домен). Это нужно, когда `api.telegram.org` заблокирован (например, в РФ) — бот продолжает работать через обходной хост, оставаясь зашифрованным (HTTPS).
 
-### Совместимость
-Любые Arduino
+Оригинальный README и документация GyverLibs — в [README_FASTBOT2_ORIGINAL.md](README_FASTBOT2_ORIGINAL.md) и папке [docs/](docs/).
 
-### Зависимости
-- [GSON](https://github.com/GyverLibs/GSON) v1.8.0+
-- [StringUtils](https://github.com/GyverLibs/StringUtils) v1.5.0+
-- [GyverHTTP](https://github.com/GyverLibs/GyverHTTP) v1.0.27+
-- [GTL](https://github.com/GyverLibs/GTL) v1.3.1+
+---
 
-## Содержание
-- [Документация](#docs)
-- [Версии](#versions)
-- [Установка](#install)
-- [Баги и обратная связь](#feedback)
+## Быстрый старт
 
-<a id="docs"></a>
+```cpp
+#include <Arduino.h>
 
-## Документация
-Находится в [папке docs](https://github.com/GyverLibs/FastBot2/tree/main/docs/1.main.md)
+#define WIFI_SSID "...."
+#define WIFI_PASS "...."
+#define BOT_TOKEN "123456:ABC-DEF..."
+#define CHAT_ID   "...."
 
-### Вывод графики
-Используйте библиотеку [CharDisplay](https://github.com/GyverLibs/CharDisplay) для вывода графиков и рисования в чате!  
+// адрес вашего Cloudflare Worker / прокси (без https:// и слэшей)
+#define PROXY_HOST "shrill-frost-5867.saivankyanhrb.workers.dev"
 
-![](https://github.com/GyverLibs/CharDisplay/blob/main/docs/plots.png)
+#include <FastBot2.h>   // или <FastBot2_Myradov.h>
+FastBot2 bot;
 
-<a id="versions"></a>
+void setup() {
+    Serial.begin(115200);
+    WiFi.begin(WIFI_SSID, WIFI_PASS);
+    while (WiFi.status() != WL_CONNECTED) delay(500);
 
-## Версии
-- v1.0
+    bot.setHost(PROXY_HOST);   // ← главная фича форка
+    bot.setToken(F(BOT_TOKEN));
+    bot.attachUpdate([](fb::Update& u) {
+        bot.sendMessage(fb::Message(u.message().text(), u.message().chat().id()));
+    });
+    bot.setPollMode(fb::Poll::Long, 60000);
+}
 
-<a id="install"></a>
+void loop() {
+    bot.tick();
+}
+```
+
+Готовый пример: `examples/withProxy/withProxy.ino`
+
+## API (что добавлено к FastBot2)
+
+| Метод | Описание |
+|---|---|
+| `bot.setHost("my-worker.workers.dev")` | Перенаправить весь трафик бота на свой хост |
+| `bot.clearHost()` | Вернуть стандартный `api.telegram.org` |
+| `bot.getHost()` | Узнать текущий хост |
+
+> `setHost()` принимает `const char*`, `String` или `IPAddress`. По умолчанию хост — `api.telegram.org` (443).
+
+## Как сделать Cloudflare Worker (бесплатно, ~3 минуты)
+
+В [Cloudflare](https://dash.cloudflare.com/) → **Workers & Pages → Create → Worker** вставьте код:
+
+```js
+export default {
+  async fetch(request) {
+    const url = new URL(request.url);
+    url.hostname = 'api.telegram.org';
+    url.port = '443';
+    const modifiedRequest = new Request(url.toString(), {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+      redirect: 'follow'
+    });
+    return fetch(modifiedRequest);
+  }
+};
+```
+
+Нажмите **Deploy** — получите адрес вида `my-tg-proxy.<subdomain>.workers.dev`. Его и передавайте в `bot.setHost(...)`.
+
+**Важные нюансы:**
+
+- В `setHost()` указывайте **только домен**, без `https://` и слэшей.
+- У Cloudflare бесплатный тариф ~100 000 запросов/сутки — класс из 20–30 ESP32 укладывается с запасом.
+- Домен `*.workers.dev` в РФ иногда придушивают. Для 100% стабильности привяжите к воркеру свой домен (Cloudflare → Worker → Settings → Custom Domains), например `tg.myschool.ru` (домен ~150–200 ₽/год), и указывайте уже его.
+- Проверка в браузере: `https://ВАШ_ВОРКЕР/bot<ТОКЕН>/getMe` должен вернуть `{"ok":true,...}`.
+
+## Как работает `setHost()` (технически)
+
+В оригинальном FastBot2 хост `api.telegram.org` «зашит» в двух местах:
+1. в HTTP-запросе (request-line `POST https://api.telegram.org/bot…` и заголовок `Host:`);
+2. в адресе TCP/TLS-соединения.
+
+В форке хост вынесен в рантайм-переменную `fb::Packet::hostName`. `setHost()` меняет и адрес соединения, и хост внутри HTTP-запроса, поэтому запросы идут **в origin-form** (`POST /bot<token>/sendMessage` + `Host: ваш-воркер`) — именно такую форму принимает Cloudflare Worker.
+
+---
 
 ## Установка
-- Библиотеку можно найти по названию **FastBot2** и установить через менеджер библиотек в:
-    - Arduino IDE
-    - Arduino IDE v2
-    - PlatformIO
-- [Скачать библиотеку](https://github.com/GyverLibs/FastBot2/archive/refs/heads/main.zip) .zip архивом для ручной установки:
-    - Распаковать и положить в *C:\Program Files (x86)\Arduino\libraries* (Windows x64)
-    - Распаковать и положить в *C:\Program Files\Arduino\libraries* (Windows x32)
-    - Распаковать и положить в *Документы/Arduino/libraries/*
-    - (Arduino IDE) автоматическая установка из .zip: *Скетч/Подключить библиотеку/Добавить .ZIP библиотеку…* и указать скачанный архив
-- Читай более подробную инструкцию по установке библиотек [здесь](https://alexgyver.ru/arduino-first/#%D0%A3%D1%81%D1%82%D0%B0%D0%BD%D0%BE%D0%B2%D0%BA%D0%B0_%D0%B1%D0%B8%D0%B1%D0%BB%D0%B8%D0%BE%D1%82%D0%B5%D0%BA)
-### Обновление
-- Рекомендую всегда обновлять библиотеку: в новых версиях исправляются ошибки и баги, а также проводится оптимизация и добавляются новые фичи
-- Через менеджер библиотек IDE: найти библиотеку как при установке и нажать "Обновить"
-- Вручную: **удалить папку со старой версией**, а затем положить на её место новую. "Замену" делать нельзя: иногда в новых версиях удаляются файлы, которые останутся при замене и могут привести к ошибкам!
 
-<a id="feedback"></a>
+### Способ 1. ZIP (быстрее всего, для учеников)
 
-## Баги и обратная связь
-При нахождении багов создавайте **Issue**, а лучше сразу пишите на почту [alex@alexgyver.ru](mailto:alex@alexgyver.ru)  
-Библиотека открыта для доработки и ваших **Pull Request**'ов!
+1. Скачайте архив: https://github.com/myratmyradov1997/FastBot2_Myradov/archive/refs/heads/main.zip
+2. Arduino IDE: **Скетч → Подключить библиотеку → Добавить .ZIP библиотеку…** → выберите скачанный архив.
+3. Готово — `FastBot2_Myradov` появится в списке библиотек.
 
-При сообщении о багах или некорректной работе библиотеки нужно обязательно указывать:
-- Версия библиотеки
-- Какой используется МК
-- Версия SDK (для ESP)
-- Версия Arduino IDE
-- Корректно ли работают ли встроенные примеры, в которых используются функции и конструкции, приводящие к багу в вашем коде
-- Какой код загружался, какая работа от него ожидалась и как он работает в реальности
-- В идеале приложить минимальный код, в котором наблюдается баг. Не полотно из тысячи строк, а минимальный код
+### Способ 2. PlatformIO
+
+В `platformio.ini`:
+
+```ini
+lib_deps =
+    https://github.com/myratmyradov1997/FastBot2_Myradov.git
+```
+
+### Способ 3. Вручную
+
+Распакуйте архив в папку библиотек Arduino: `~/Documents/Arduino/libraries/FastBot2_Myradov/`
+
+> Для работы нужны зависимости оригинала (ставятся автоматически при установке через ZIP-менеджер Arduino IDE / PlatformIO):
+> [GSON](https://github.com/GyverLibs/GSON), [GyverHTTP](https://github.com/GyverLibs/GyverHTTP), [StringUtils](https://github.com/GyverLibs/StringUtils), [GTL](https://github.com/GyverLibs/GTL).
+
+### Почему не «по названию» в менеджере библиотек Arduino?
+
+Чтобы библиотека ставилась по названию из **Library Manager** (Arduino IDE), её нужно опубликовать в официальном реестре [arduino-libraries/library-registry](https://github.com/arduino/libraries) — это отдельный публичный pull-request с ревью. Форк можно опубликовать позже (имя `FastBot2_Myradov` в реестре свободно), но для занятий достаточно ZIP/PlatformIO-способов выше.
+
+---
+
+## Лицензия и атрибуция
+
+- Код форка — **MIT**, © 2023 GyverLibs (оригинальный [LICENSE](LICENSE) сохранён).
+- Форк: Myradov, 2026.
+- Оригинал: [GyverLibs/FastBot2](https://github.com/GyverLibs/FastBot2) © AlexGyver.
+
+## Обратная связь
+
+Для своих занятий/школьников: вопросы — в Issues этого репозитория.

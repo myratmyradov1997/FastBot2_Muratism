@@ -18,6 +18,9 @@ class Packet : public gson::Str {
     };
 
    public:
+    // текущий хост Telegram API (можно сменить через FastBot2::setHost())
+    static String hostName;
+
     Packet() : gson::Str(200) {}
 
 #if !defined(FB_NO_FILE) && (defined(ESP8266) || defined(ESP32))
@@ -70,7 +73,9 @@ class Packet : public gson::Str {
         concat(path);
         concat(F(
             " HTTP/1.1\r\n"
-            "Host: " TELEGRAM_HOST "\r\n\r\n"));
+            "Host: "));
+        concat(Packet::hostName);
+        concat(F("\r\n\r\n"));
     }
 
     // query string
@@ -105,7 +110,9 @@ class Packet : public gson::Str {
 
                 concat(F(
                     " HTTP/1.1\r\n"
-                    "Host: " TELEGRAM_HOST
+                    "Host: "));
+                concat(Packet::hostName);
+                concat(F(
                     "\r\n"
                     "Content-Type: multipart/form-data; boundary=" FB_BOUNDARY
                     "\r\n"
@@ -163,7 +170,9 @@ class Packet : public gson::Str {
     bool _qs_first = 1;
 
     void _beginPost(const __FlashStringHelper* cmd, const String& token) {
-        concat(F("POST https://" TELEGRAM_HOST "/bot"));
+        concat(F("POST https://"));
+        concat(Packet::hostName);
+        concat(F("/bot"));
         concat(token);
         concat('/');
         concat(cmd);
@@ -171,7 +180,9 @@ class Packet : public gson::Str {
     void _beginHeaders() {
         concat(F(
             " HTTP/1.1\r\n"
-            "Host: " TELEGRAM_HOST
+            "Host: "));
+        concat(Packet::hostName);
+        concat(F(
             "\r\n"
             "Cache-Control: no-cache\r\n"));
     }

@@ -1,5 +1,5 @@
 #######################################
-# Syntax Coloring Map For FastBot2
+# Syntax Coloring Map For FastBot2_Myradov
 #######################################
 
 #######################################
@@ -11,7 +11,12 @@ FastBot2Client	KEYWORD1
 #######################################
 # Methods and Functions (KEYWORD2)
 #######################################
-
+setHost	KEYWORD2
+clearHost	KEYWORD2
+getHost	KEYWORD2
+setProxy	KEYWORD2
+clearProxy	KEYWORD2
+setToken	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
