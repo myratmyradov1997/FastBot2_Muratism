@@ -1,4 +1,4 @@
-// FastBot2_Myradov — работа через свой хост (Cloudflare Worker / прокси),
+// FastBot2_Muratism — работа через свой хост (Cloudflare Worker / прокси),
 // когда api.telegram.org заблокирован.
 //
 // 1. Создайте Cloudflare Worker с кодом из README (простой reverse-proxy).
@@ -15,7 +15,7 @@
 // адрес вашего Cloudflare Worker / прокси (БЕЗ https:// и слэшей)
 #define PROXY_HOST "shrill-frost-5867.saivankyanhrb.workers.dev"
 
-// можно подключить как <FastBot2.h>, так и <FastBot2_Myradov.h>
+// можно подключить как <FastBot2.h>, так и <FastBot2_Muratism.h>
 #include <FastBot2.h>
 FastBot2 bot;
 
@@ -39,7 +39,7 @@ void setup() {
     }
     Serial.println("Connected");
 
-    // ============ FastBot2_Myradov ============
+    // ============ FastBot2_Muratism ============
     // главное отличие от стокового FastBot2: перенаправляем бота
     // на свой прокси-хост (Cloudflare Worker), чтобы обойти блокировку
     bot.setHost(PROXY_HOST);   // <- весь HTTP-трафик пойдёт на воркер

@@ -1,4 +1,4 @@
-# FastBot2_Myradov
+# FastBot2_Muratism
 
 Форк библиотеки [FastBot2](https://github.com/GyverLibs/FastBot2) (AlexGyver) — Telegram-бот для Arduino / ESP8266 / ESP32.
 
@@ -21,7 +21,7 @@
 // адрес вашего Cloudflare Worker / прокси (без https:// и слэшей)
 #define PROXY_HOST "shrill-frost-5867.saivankyanhrb.workers.dev"
 
-#include <FastBot2.h>   // или <FastBot2_Myradov.h>
+#include <FastBot2.h>   // или <FastBot2_Muratism.h>
 FastBot2 bot;
 
 void setup() {
@@ -98,9 +98,9 @@ export default {
 
 ### Способ 1. ZIP (быстрее всего, для учеников)
 
-1. Скачайте архив: https://github.com/myratmyradov1997/FastBot2_Myradov/archive/refs/heads/main.zip
+1. Скачайте архив: https://github.com/myratmyradov1997/FastBot2_Muratism/archive/refs/heads/main.zip
 2. Arduino IDE: **Скетч → Подключить библиотеку → Добавить .ZIP библиотеку…** → выберите скачанный архив.
-3. Готово — `FastBot2_Myradov` появится в списке библиотек.
+3. Готово — `FastBot2_Muratism` появится в списке библиотек.
 
 ### Способ 2. PlatformIO
 
@@ -108,26 +108,26 @@ export default {
 
 ```ini
 lib_deps =
-    https://github.com/myratmyradov1997/FastBot2_Myradov.git
+    https://github.com/myratmyradov1997/FastBot2_Muratism.git
 ```
 
 ### Способ 3. Вручную
 
-Распакуйте архив в папку библиотек Arduino: `~/Documents/Arduino/libraries/FastBot2_Myradov/`
+Распакуйте архив в папку библиотек Arduino: `~/Documents/Arduino/libraries/FastBot2_Muratism/`
 
 > Для работы нужны зависимости оригинала (ставятся автоматически при установке через ZIP-менеджер Arduino IDE / PlatformIO):
 > [GSON](https://github.com/GyverLibs/GSON), [GyverHTTP](https://github.com/GyverLibs/GyverHTTP), [StringUtils](https://github.com/GyverLibs/StringUtils), [GTL](https://github.com/GyverLibs/GTL).
 
 ### Почему не «по названию» в менеджере библиотек Arduino?
 
-Чтобы библиотека ставилась по названию из **Library Manager** (Arduino IDE), её нужно опубликовать в официальном реестре [arduino-libraries/library-registry](https://github.com/arduino/libraries) — это отдельный публичный pull-request с ревью. Форк можно опубликовать позже (имя `FastBot2_Myradov` в реестре свободно), но для занятий достаточно ZIP/PlatformIO-способов выше.
+Чтобы библиотека ставилась по названию из **Library Manager** (Arduino IDE), её нужно опубликовать в официальном реестре [arduino-libraries/library-registry](https://github.com/arduino/libraries) — это отдельный публичный pull-request с ревью. Форк можно опубликовать позже (имя `FastBot2_Muratism` в реестре свободно), но для занятий достаточно ZIP/PlatformIO-способов выше.
 
 ---
 
 ## Лицензия и атрибуция
 
 - Код форка — **MIT**, © 2023 GyverLibs (оригинальный [LICENSE](LICENSE) сохранён).
-- Форк: Myradov, 2026.
+- Форк: Muratism, 2026.
 - Оригинал: [GyverLibs/FastBot2](https://github.com/GyverLibs/FastBot2) © AlexGyver.
 
 ## Обратная связь
