@@ -5,7 +5,7 @@
 #define BOT_TOKEN ""
 #define CHAT_ID ""
 
-#include <FastBot2.h>
+#include <FastBot2_Muratism.h>
 FastBot2 bot;
 
 void updateh(fb::Update& u) {

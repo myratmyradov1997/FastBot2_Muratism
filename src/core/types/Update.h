@@ -1,6 +1,6 @@
 #pragma once
 #include <Arduino.h>
-#include <GSON.h>
+#include "../../deps/GSON/GSON.h"
 
 #include "MessageRead.h"
 #include "QueryRead.h"

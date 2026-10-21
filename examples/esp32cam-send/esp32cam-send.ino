@@ -2,7 +2,7 @@
 // напиши боту команду /start для отправки фото
 
 #include <Arduino.h>
-#include <FastBot2.h>
+#include <FastBot2_Muratism.h>
 #include <WiFi.h>
 
 #include "camera.h"

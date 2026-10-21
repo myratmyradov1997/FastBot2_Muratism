@@ -1,7 +1,7 @@
 #pragma once
 #include <Arduino.h>
-#include <GSON.h>
-#include <StringUtilsGyver.h>
+#include "../../deps/GSON/GSON.h"
+#include "../../deps/StringUtils/StringUtilsGyver.h"
 
 #include "Message_class.h"
 #include "../api.h"

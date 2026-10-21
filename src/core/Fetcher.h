@@ -1,6 +1,6 @@
 #pragma once
 #include <Arduino.h>
-#include <GyverHTTP.h>
+#include "../deps/GyverHTTP/GyverHTTP.h"
 
 #include "../bot_config.h"
 #include "core_class.h"

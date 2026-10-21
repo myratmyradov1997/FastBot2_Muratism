@@ -1,10 +1,10 @@
 #pragma once
 #include <Arduino.h>
-#include <GyverHTTP.h>
-#include <StringUtilsGyver.h>
+#include "../deps/GyverHTTP/GyverHTTP.h"
+#include "../deps/StringUtils/StringUtilsGyver.h"
 
 #include "../bot_config.h"
-#include "core/api.h"
+#include "./api.h"
 
 #ifdef FB_ESP_BUILD
 #include <FS.h>

@@ -1,7 +1,7 @@
 #pragma once
 #include <Arduino.h>
-#include <GSON.h>
-#include <StreamReader.h>
+#include "../deps/GSON/GSON.h"
+#include "../deps/GyverHTTP/StreamReader.h"
 
 #include "api.h"
 #include "core_class.h"

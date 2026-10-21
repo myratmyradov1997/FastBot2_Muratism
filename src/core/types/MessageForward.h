@@ -1,9 +1,9 @@
 #pragma once
 #include <Arduino.h>
-#include <GSON.h>
-#include <StringUtilsGyver.h>
+#include "../../deps/GSON/GSON.h"
+#include "../../deps/StringUtils/StringUtilsGyver.h"
 
-#include "FastBot2Client_class.h"
+#include "../../FastBot2Client_class.h"
 #include "Message.h"
 #include "../api.h"
 #include "../packet.h"

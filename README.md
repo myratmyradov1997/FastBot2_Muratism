@@ -21,7 +21,7 @@
 // адрес вашего Cloudflare Worker / прокси (без https:// и слэшей)
 #define PROXY_HOST "shrill-frost-5867.saivankyanhrb.workers.dev"
 
-#include <FastBot2.h>   // или <FastBot2_Muratism.h>
+#include <FastBot2_Muratism.h>
 FastBot2 bot;
 
 void setup() {
@@ -115,8 +115,23 @@ lib_deps =
 
 Распакуйте архив в папку библиотек Arduino: `~/Documents/Arduino/libraries/FastBot2_Muratism/`
 
-> Для работы нужны зависимости оригинала (ставятся автоматически при установке через ZIP-менеджер Arduino IDE / PlatformIO):
-> [GSON](https://github.com/GyverLibs/GSON), [GyverHTTP](https://github.com/GyverLibs/GyverHTTP), [StringUtils](https://github.com/GyverLibs/StringUtils), [GTL](https://github.com/GyverLibs/GTL).
+### Зависимости уже внутри
+
+Ставить больше ничего не нужно. Библиотеки, от которых зависит FastBot2, лежат внутри архива в `src/deps/` и подключаются по относительным путям:
+
+| Библиотека | Версия | Лицензия |
+|---|---|---|
+| [GSON](https://github.com/GyverLibs/GSON) | 1.8.2 | MIT |
+| [StringUtils](https://github.com/GyverLibs/StringUtils) | 1.6.1 | MIT |
+| [GTL](https://github.com/GyverLibs/GTL) | 1.3.6 | MIT |
+| [GyverHTTP](https://github.com/GyverLibs/GyverHTTP) | 1.0.30 | MIT |
+
+Поэтому старые или продублированные копии этих библиотек в папке `libraries` (например, `StringUtils` и `StringUtils-1.6.1` одновременно) больше не мешают сборке: Arduino IDE их просто не использует.
+
+Два правила, чтобы не было конфликтов:
+
+- подключайте библиотеку как `#include <FastBot2_Muratism.h>`. Если на компьютере стоит оригинальный FastBot2, строка `#include <FastBot2.h>` выберет именно его, а не форк;
+- не подключайте в том же скетче `GSON.h`, `StringUtils.h`, `GTL.h` и `GyverHTTP.h` отдельно. Их классы (`gson::Str`, `su::Text` и другие) уже доступны после `#include <FastBot2_Muratism.h>`.
 
 ### Почему не «по названию» в менеджере библиотек Arduino?
 

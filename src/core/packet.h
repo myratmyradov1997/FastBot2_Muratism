@@ -1,10 +1,10 @@
 #pragma once
 #include <Arduino.h>
-#include <GSON.h>
+#include "../deps/GSON/GSON.h"
 
 #include "../bot_config.h"
 #include "Multipart.h"
-#include "core/types/ID.h"
+#include "./types/ID.h"
 
 #define FB_BOUNDARY "---------FAST_BOT2"
 

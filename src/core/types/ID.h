@@ -1,6 +1,6 @@
 #pragma once
 #include <Arduino.h>
-#include <StringUtilsGyver.h>
+#include "../../deps/StringUtils/StringUtilsGyver.h"
 
 namespace fb {
 

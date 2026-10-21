@@ -39,7 +39,7 @@ void loopPrint() {
 #include <LittleFS.h>
 
 // Нативная версия WiFi esp8266/esp32
-#include <FastBot2.h>
+#include <FastBot2_Muratism.h>
 FastBot2 bot;
 
 // версия с другим клиентом, например tinygsm

@@ -16,7 +16,7 @@
 #define PROXY_HOST "shrill-frost-5867.saivankyanhrb.workers.dev"
 
 // можно подключить как <FastBot2.h>, так и <FastBot2_Muratism.h>
-#include <FastBot2.h>
+#include <FastBot2_Muratism.h>
 FastBot2 bot;
 
 void updateh(fb::Update& u) {
